@@ -1,0 +1,11 @@
+{
+  "name": "wordpress-codex",
+  "version": "1.0.0",
+  "description": "Wox.Plugin.WordPressCodex =====================",
+  "main": "index.js",
+  "scripts": {
+    "test": "/mnt/c/Users/DAM/AppData/Local/Programs/Python/Python37-32/python.exe 'test.py'"
+  },
+  "author": "",
+  "license": "ISC"
+}
