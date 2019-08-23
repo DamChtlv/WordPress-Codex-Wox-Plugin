@@ -1,16 +1,6 @@
 Wox.Plugin.WordPressCodex
 =====================
 
-WordPress Codex plugin for Wox
-------------------------------
-
-This is a fork of [Alfred WordPress Developer Workflow](https://github.com/keesiemeijer/alfred-wordpress-developer-workflow) (by [@keesiemeijer](https://github.com/keesiemeijer)) for Wox (Windows) written in Python
-
-
-[![Screen 1](https://github.com/DamChtlv/WordPress-Codex-Wox-Plugin/blob/screenshots/Screenshots/screen1.png)](#screen1)
-
-[![Screen 2](https://github.com/DamChtlv/WordPress-Codex-Wox-Plugin/blob/screenshots/Screenshots/screen2.png)](#screen2)
-
 Search
 ---------
 
@@ -20,6 +10,10 @@ You can search through :
 - ***Hooks***
 - ***Filters***
 - ***Functions***
+
+[![Screen 1](https://github.com/DamChtlv/WordPress-Codex-Wox-Plugin/blob/screenshots/Screenshots/screen1.png)](#screen1)
+
+[![Screen 2](https://github.com/DamChtlv/WordPress-Codex-Wox-Plugin/blob/screenshots/Screenshots/screen2.png)](#screen2)
 
 Installation
 ---------
@@ -32,3 +26,7 @@ To install the plugin :
 Version
 -------
 *It's all based on **WordPress 5.2 Codex / Developer references***
+
+Credits
+---------
+This is a fork of [Alfred WordPress Developer Workflow](https://github.com/keesiemeijer/alfred-wordpress-developer-workflow) (by [@keesiemeijer](https://github.com/keesiemeijer)) **for Wox (Windows)** written in Python
