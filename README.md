@@ -1,7 +1,7 @@
 Wox.Plugin.WordPressCodex
 =====================
 
-Search
+Features
 ---------
 
 You can search through :
