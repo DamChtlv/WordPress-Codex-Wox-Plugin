@@ -4,7 +4,7 @@ Wox.Plugin.WordPressCodex
 Features
 ---------
 
-You can search through :
+You can search through all this and click to access rapidly on the WordPress reference page :
 - ***Actions***
 - ***Classes***
 - ***Hooks***
