@@ -25,7 +25,7 @@ To install the plugin :
 - Restart **Wox** and type `Settings`
 - Activate **WordPress Codex** plugin in **Plugin** tab
 - Verify that you have correctly set the **Python** Path in **General** tab
-- Type **wp** & Enjoy ✌ 
+- Type `wp` in **Wox** & Enjoy ✌ 
 
 Version
 -------
