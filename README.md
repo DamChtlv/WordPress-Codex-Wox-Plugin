@@ -3,9 +3,9 @@ Wox.Plugin.WordPressCodex
 
 Searching WordPress core made easy. Finding results is very fast because it searches in local JSON files (instead of an online API). The JSON files included in this workflow are created with the [WP Parser JSON plugin](https://github.com/keesiemeijer/wp-parser-json)
 
-[![Screen 1](https://github.com/DamChtlv/WordPress-Codex-Wox-Plugin/blob/screenshots/Screenshots/screen1.png)](#screen1)
+[![Screen 1](https://github.com/DamChtlv/WordPress-Codex-Wox-Plugin/blob/assets/Screenshots/screen1.png)](#screen1)
 
-[![Screen 2](https://github.com/DamChtlv/WordPress-Codex-Wox-Plugin/blob/screenshots/Screenshots/screen2.png)](#screen2)
+[![Screen 2](https://github.com/DamChtlv/WordPress-Codex-Wox-Plugin/blob/assets/Screenshots/screen2.png)](#screen2)
 
 Features
 ---------
