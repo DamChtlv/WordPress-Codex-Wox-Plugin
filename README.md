@@ -22,7 +22,8 @@ Installation
 To install the plugin :
 - Download the latest release of the plugin : https://github.com/DamChtlv/WordPress-Codex-Wox-Plugin/releases/latest/download/WordPress.Codex.zip
 - Go to your folder `%USER%/AppData/Roaming/Wox/Plugins` then simply unzip the archive and you should have a folder named **WordPress Codex**
-- Activate **WordPress Codex** plugin in **Wox settings**
+- Restart **Wox** and type **settings**
+- Activate **WordPress Codex** plugin in **Plugin** tab
 - Enjoy ✌ 
 
 Version
