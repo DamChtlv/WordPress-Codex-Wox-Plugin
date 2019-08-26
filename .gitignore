@@ -1,0 +1,5 @@
+.vscode
+wox.py
+Release/
+node_modules/
+__pycache__/
