@@ -24,7 +24,7 @@ To install the plugin :
 - Go to your folder `%USER%/AppData/Roaming/Wox/Plugins` then simply unzip the archive and you should have a folder named **WordPress Codex**
 - Restart **Wox** and type `Settings`
 - Activate **WordPress Codex** plugin in **Plugin** tab
-- Verify that you have correctly set the **Python** Path in **General** tab *(Python 3.7+ required)*
+- Verify that you have correctly set the **Python** Path in **General** tab *(Python 3 required)*
 - Type `wp` in **Wox** & Enjoy ✌ 
 
 Version
