@@ -1,71 +1,87 @@
-#encoding=utf8
+# -*- coding: utf-8 -*-
 
+# Imports
 import json
-import os.path
-from os import path
+import os
 import requests
 from bs4 import BeautifulSoup
 import webbrowser
 from wox import Wox, WoxAPI
 
+# Variables
+CURRENT_DIR = os.getcwd()
+JSON_DIR_NAME = 'Json'
+JSON_DIR = os.path.join(CURRENT_DIR, JSON_DIR_NAME) + os.sep
+# JSON_DIR = JSON_DIR_NAME + os.sep
+REFERENCES = [
+    'action',
+    'class',
+    'filter',
+    'function',
+    'hook',
+]
+
 class WordPressCodex(Wox) :
+    wp_ref_version = '5.2.2'
+    # wp_ref_version = ''
+
+    def __init__(self):
+        super().__init__()
+        self.load_json()
 
     def query(self, query) :
 
         results = []
-        references = [
-            'action',
-            'class',
-            'filter',
-            'function',
-            'hook',
-        ]
-
-        dir_path = os.path.dirname(os.path.realpath(__file__))
-
-        for reference in references :
+        for reference in REFERENCES :
             if reference in query : # "action "...
 
-                # Add "e" for "classes"
-                if 'class' in reference :
-                    jsonName = reference + 'es.json'
-                else :
-                    jsonName = reference + 's.json'
-
-                # If no json files found, try to fetch it and make json files
-                if not (path.exists(dir_path + '/Json/' + jsonName)) :
-                    jsonUrl = 'https://raw.githubusercontent.com/keesiemeijer/alfred-wordpress-developer-workflow/master/' + jsonName
-                    request = requests.get(jsonUrl)
-                    fileContent = request.json()
-
-                    # Create file and add the json content
-                    with open(dir_path + '/Json/' + jsonName, 'w') as createFile :
-                        createFile.write(fileContent)
+                # Download latest version of json file if we don't have it yet
+                json_file = self.get_json_file_path(reference)
+                if not os.path.isfile(json_file) :
+                    self.get_json_file(reference)
 
                 # Open json file content
-                with open(dir_path + '/Json/' + jsonName, 'r') as openFile : 
+                with open(json_file, 'r') as openFile : 
                     fileContent = json.load(openFile)
 
                 url = fileContent['url']
                 content = fileContent['content']
+                wp_ref_version = fileContent['version']
+
+                self.wp_ref_version = wp_ref_version
+
                 secondSearch = query.replace(reference + ' ', '').replace(' ', '_')
+                if not secondSearch or secondSearch == ' ' or len(secondSearch) <= 2 :
 
-                # Add reference items
-                for item in content :
-                    if not secondSearch or secondSearch == ' ' or len(secondSearch) <= 2  :
-                        results.append({
-                            'Title': item['title'],
-                            'SubTitle': item['slug'].replace('_', ' ').capitalize(),
-                            'IcoPath' : 'Images/app.ico',
-                            'JsonRPCAction': {
-                                'method': 'openUrl',
-                                'parameters': [url + '/' + item['slug']],
-                                'dontHideAfterAction': True
-                            }
-                        })
+                    resultTitle = self.get_ref_plural_name(reference).capitalize()
+                    results.append({
+                        'Title': resultTitle,
+                        'SubTitle': 'Search ' + resultTitle,
+                        'IcoPath' : 'Images/app.ico',
+                        'JsonRPCAction': {
+                            'method': 'Wox.ChangeQueryText',
+                            'parameters': ['wp ' + reference + ' ', True],
+                            'dontHideAfterAction': True
+                        }
+                    })
 
-                    else :
-                        if secondSearch in item['slug'] :
+                else : 
+
+                    # Add reference items
+                    for item in content :
+                        if not secondSearch or secondSearch == '' or secondSearch == ' ' :
+                            results.append({
+                                'Title': item['title'],
+                                'SubTitle': item['slug'].replace('_', ' ').capitalize(),
+                                'IcoPath' : 'Images/app.ico',
+                                'JsonRPCAction': {
+                                    'method': 'openUrl',
+                                    'parameters': [url + '/' + item['slug']],
+                                    'dontHideAfterAction': True
+                                }
+                            })
+
+                        elif secondSearch in item['slug'] :
                             results.append({
                                 'Title': item['title'],
                                 'SubTitle': item['slug'].replace('_', ' ').capitalize(),
@@ -78,12 +94,9 @@ class WordPressCodex(Wox) :
                             })
 
             # Add references as result if search is empty or nearly empty
-            elif not query or query == ' ' or len(query) <= 3 :
-                if 'class' in reference :
-                    resultTitle = reference.capitalize() + 'es'
-                else :
-                    resultTitle = reference.capitalize() + 's'
+            elif not query or query == ' ' or len(query) <= 2 or query in reference :
 
+                resultTitle = self.get_ref_plural_name(reference).capitalize()
                 results.append({
                     'Title': resultTitle,
                     'SubTitle': 'Search ' + resultTitle,
@@ -95,11 +108,112 @@ class WordPressCodex(Wox) :
                     }
                 })
 
+        # Update "update" result title
+        if not os.path.isdir(JSON_DIR) :
+            title = 'Download JSON files'
+        elif not self.wp_ref_version or self.wp_ref_version == '' :
+            title = 'Update JSON files'
+        else : 
+            title = 'Update JSON files (Current WP version: ' + self.wp_ref_version + ')'
+
+        # Add "update" as result
+        if not query or query == ' ' or len(query) <= 2 or query in 'update' :
+            results.append({
+                'Title': title,
+                'SubTitle': 'Update WordPress reference json files to latest version',
+                'IcoPath' : 'Images/app.ico',
+                'JsonRPCAction': {
+                    'method': 'Wox.ChangeQuery',
+                    'parameters': ['wp update', True],
+                    'dontHideAfterAction': True
+                }
+            })
+
+        # Update action
+        if query == 'update' :
+            try : 
+                self.get_json_files()
+
+                results = []
+                results.append({
+                    'Title': 'Update done! WP v' + self.wp_ref_version,
+                    'SubTitle': 'WordPress references are up-to-date.',
+                    'IcoPath' : 'Images/app.ico',
+                    'JsonRPCAction': {
+                        'method': 'Wox.ChangeQuery',
+                        'parameters': ['wp ', True],
+                        'dontHideAfterAction': True
+                    }
+                })
+                return results
+
+            except : 
+                self.debug('JSON files update failed...')
+
         return results
+
+    # Make plural names
+    def get_ref_plural_name(self, reference) :
+        if 'class' in reference :
+            ref_plural = reference + 'es'
+        else :
+            ref_plural = reference + 's'
+        return ref_plural
+
+    def get_json_file_name(self, reference) :
+        json_name = self.get_ref_plural_name(reference) + '.json'
+        return json_name
+
+    def get_json_file_path(self, reference) :
+        json_name = self.get_json_file_name(reference)
+        return os.path.join(JSON_DIR, json_name)
+
+    def get_json_file(self, reference) :
+        json_name = self.get_json_file_name(reference)
+        json_file = self.get_json_file_path(reference)
+        json_url = 'https://raw.githubusercontent.com/keesiemeijer/alfred-wordpress-developer-workflow/master/' + json_name
+
+        try : 
+            request = requests.get(json_url)
+            distantFileContent = request.json()
+            distantFileVersion = distantFileContent['version']
+
+            if not self.wp_ref_version or self.wp_ref_version == '' :
+                self.wp_ref_version = distantFileVersion
+
+            # If no json file found, try to fetch it and make local json file
+            if not os.path.isfile(json_file) :
+                with open(json_file, 'w') as createFile :
+                    json.dump(distantFileContent, createFile)
+
+            # We have json, check version and fetch new one if outdated
+            else :
+                with open(json_file, 'r') as openFile :
+                    
+                    localFileContent = json.load(openFile)
+                    localJsonVersion = localFileContent['version']
+                    if (localJsonVersion != distantFileVersion) :
+                        with open(json_file, 'w') as createFile :
+                            json.dump(distantFileContent, createFile)
+
+        except :
+            self.debug('Error while trying to download "' + json_name + '", please try again :)')
+
+    def get_json_files(self) :
+        for reference in REFERENCES :
+            self.get_json_file(reference)
 
     def openUrl(self, url) :
         webbrowser.open(url)
         WoxAPI.change_query(url)
+
+    # Create "Json" dir if it doesn't exist and grab json files
+    def load_json(self) :
+        if not os.path.isdir(JSON_DIR) :
+            try : 
+                os.mkdir(JSON_DIR)
+            except : 
+                self.debug('Error while making "Json" folder in the plugin directory')
 
 if __name__ == "__main__" :
     WordPressCodex()
