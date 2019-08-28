@@ -2,21 +2,19 @@ Wox.Plugin.WordPressCodex
 =====================
 
 Searching WordPress core made easy. Finding results is very fast because it searches in local JSON files (instead of an online API).
-The JSON files included in this workflow are created with the [WP Parser JSON plugin](https://github.com/keesiemeijer/wp-parser-json)
-
-[![Screen 1](https://github.com/DamChtlv/WordPress-Codex-Wox-Plugin/blob/assets/Screenshots/screen1.png)](#screen1)
-
-[![Screen 2](https://github.com/DamChtlv/WordPress-Codex-Wox-Plugin/blob/assets/Screenshots/screen2.png)](#screen2)
+The JSON files included in this workflow are created with the [WP Parser JSON plugin](https://github.com/keesiemeijer/wp-parser-json)  
 
 Features
 ---------
-
 You can search through all this and click to access rapidly on the WordPress reference page :
 - ***Actions***: `wp action init`
 - ***Classes***: `wp class wp query`
 - ***Hooks***: `wp hook get term`
 - ***Filters***: `wp filter edit term link`
 - ***Functions***: `wp function get permalink`
+
+[![Screen 1](https://github.com/DamChtlv/WordPress-Codex-Wox-Plugin/blob/assets/Screenshots/screen1.png)](#screen1)  
+[![Screen 2](https://github.com/DamChtlv/WordPress-Codex-Wox-Plugin/blob/assets/Screenshots/screen2.png)](#screen2)  
 
 Installation
 ---------
