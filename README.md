@@ -32,7 +32,7 @@ To install the plugin :
 
 Version
 -------
-*It's all based on **WordPress 5.2 Codex / Developer references***
+*It's all based on **WordPress 5.2 Codex / Developer references***  
 **Update** command allows to update json files to get latest version of codex reference.
 
 TODO
