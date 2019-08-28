@@ -42,4 +42,4 @@ TODO
 
 Credits
 ---------
-This is a fork of [Alfred WordPress Developer Workflow](https://github.com/keesiemeijer/alfred-wordpress-developer-workflow) (by [@keesiemeijer](https://github.com/keesiemeijer)) **for Wox (Windows)** written in Python
+This is inspired by / fork of [Alfred WordPress Developer Workflow](https://github.com/keesiemeijer/alfred-wordpress-developer-workflow) (by [@keesiemeijer](https://github.com/keesiemeijer)) **for Wox (Windows)** written in Python
