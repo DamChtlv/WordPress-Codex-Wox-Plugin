@@ -24,7 +24,8 @@ To install the plugin :
 - Download the latest release of the plugin : https://github.com/DamChtlv/WordPress-Codex-Wox-Plugin/releases/latest/download/WordPress.Codex.zip
 - Go to your folder `%USER%/AppData/Roaming/Wox/Plugins` then simply unzip the archive and you should have a folder named **WordPress Codex**
 - Restart **Wox** and type `Settings`
-- Verify that you have correctly set the **Python** Path in **General** tab : *Should be something like:* `C:/Users/%user%/AppData/Local/Programs/Python/Python37/`
+- Verify that you have correctly set the **Python** Path in **General** tab 
+*Should be something like:* `C:/Users/%user%/AppData/Local/Programs/Python/Python37/`
 - Type `wp` in **Wox** & wait few secs *(you will see the loading occuring while it's checking / updating json files)*
 - Enjoy ✌ 
 
