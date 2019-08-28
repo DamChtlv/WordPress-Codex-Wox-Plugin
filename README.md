@@ -12,11 +12,11 @@ Features
 ---------
 
 You can search through all this and click to access rapidly on the WordPress reference page :
-- ***Actions***
-- ***Classes***
-- ***Hooks***
-- ***Filters***
-- ***Functions***
+- ***Actions***: `wp action init`
+- ***Classes***: `wp class wp query`
+- ***Hooks***: `wp hook get term`
+- ***Filters***: `wp filter edit term link`
+- ***Functions***: `wp function get permalink`
 
 Installation
 ---------
