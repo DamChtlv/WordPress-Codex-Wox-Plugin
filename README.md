@@ -33,6 +33,12 @@ To install the plugin :
 Version
 -------
 *It's all based on **WordPress 5.2 Codex / Developer references***
+**Update** command allows to update json files to get latest version of codex reference.
+
+TODO
+----
+- Allow random search without prefix: `wp get permalink` *(and maybe add type of reference in description of result)*  
+- Improve search algorithm, this should normally works: `wp function get title` *(by exploding each word and search for each of them a match in all json)*
 
 Credits
 ---------
