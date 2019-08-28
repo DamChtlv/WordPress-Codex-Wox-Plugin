@@ -1,7 +1,8 @@
 Wox.Plugin.WordPressCodex
 =====================
 
-Searching WordPress core made easy. Finding results is very fast because it searches in local JSON files (instead of an online API). The JSON files included in this workflow are created with the [WP Parser JSON plugin](https://github.com/keesiemeijer/wp-parser-json)
+Searching WordPress core made easy. Finding results is very fast because it searches in local JSON files (instead of an online API).
+The JSON files included in this workflow are created with the [WP Parser JSON plugin](https://github.com/keesiemeijer/wp-parser-json)
 
 [![Screen 1](https://github.com/DamChtlv/WordPress-Codex-Wox-Plugin/blob/assets/Screenshots/screen1.png)](#screen1)
 
@@ -23,9 +24,7 @@ To install the plugin :
 - Download the latest release of the plugin : https://github.com/DamChtlv/WordPress-Codex-Wox-Plugin/releases/latest/download/WordPress.Codex.zip
 - Go to your folder `%USER%/AppData/Roaming/Wox/Plugins` then simply unzip the archive and you should have a folder named **WordPress Codex**
 - Restart **Wox** and type `Settings`
-- Activate **WordPress Codex** plugin in **Plugin** tab
-- Verify that you have correctly set the **Python** Path in **General** tab
-*Should be something like: `C:/Users/%user%/AppData/Local/Programs/Python/Python37/`*
+- Verify that you have correctly set the **Python** Path in **General** tab : *Should be something like:* `C:/Users/%user%/AppData/Local/Programs/Python/Python37/`
 - Type `wp` in **Wox** & wait few secs *(you will see the loading occuring while it's checking / updating json files)*
 - Enjoy ✌ 
 
