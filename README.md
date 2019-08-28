@@ -20,7 +20,8 @@ Installation
 ---------
 To install the plugin :
 - Download the latest release of the plugin : https://github.com/DamChtlv/WordPress-Codex-Wox-Plugin/releases/latest/download/WordPress.Codex.zip
-- Go to your folder `C:/Users/%USER%/AppData/Roaming/Wox/Plugins` then simply unzip the archive and you should have a folder named **WordPress Codex** `C:/Users/%USER%/AppData/Roaming/Wox/Plugins/WordPress Codex/`
+- Go to your folder `C:/Users/%USER%/AppData/Roaming/Wox/Plugins` then simply unzip the archive and you should have a folder named **WordPress Codex**  
+*Should be something like: `C:/Users/%USER%/AppData/Roaming/Wox/Plugins/WordPress Codex/`*
 - Restart **Wox** and type `Settings`
 - Verify that you have correctly set the **Python** Path in **General** tab  
 *Should be something like: `C:/Users/%user%/AppData/Local/Programs/Python/Python37/`*  
