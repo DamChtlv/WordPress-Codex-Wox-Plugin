@@ -34,6 +34,7 @@ REFERENCES = [
     'function',
     'hook',
 ]
+STR_REFERENCES = ' '.join(REFERENCES)
 
 class WordPressCodex(Wox):
     wp_ref_version = '5.2.2'
@@ -44,8 +45,93 @@ class WordPressCodex(Wox):
 
     def query(self, query):
         results = []
-        for reference in REFERENCES:
-            if reference in query:  # "action "...
+
+        # Prefix query ("wp function get permalink")
+        if query in STR_REFERENCES:
+            for reference in REFERENCES:
+                if reference in query:  # "action "...
+
+                    # Download latest version of json file if we don't have it yet
+                    json_file = self.get_json_file_path(reference)
+                    if not os.path.isfile(json_file):
+                        self.get_json_file(reference)
+
+                    # Open json file content
+                    with open(json_file, 'r') as openFile:
+                        fileContent = json.load(openFile)
+
+                    url = fileContent['url']
+                    content = fileContent['content']
+                    wp_ref_version = fileContent['version']
+
+                    self.wp_ref_version = wp_ref_version
+
+                    secondSearch = query.replace(reference + ' ', '').replace(' ', '_')
+                    if not secondSearch or secondSearch == ' ' or len(secondSearch) <= 2:
+
+                        resultTitle = self.get_ref_plural_name(reference).capitalize()
+                        results.append({
+                            'Title': resultTitle,
+                            'SubTitle': 'Search ' + resultTitle,
+                            'IcoPath': 'Images/app.ico',
+                            'JsonRPCAction': {
+                                'method': 'Wox.ChangeQueryText',
+                                'parameters': ['wp ' + reference + ' ', True],
+                                'dontHideAfterAction': True
+                            }
+                        })
+
+                    else:
+
+                        # Add reference items
+                        for item in content:
+                            if not secondSearch or secondSearch == '' or secondSearch == ' ':
+                                results.append({
+                                    'Title': item['title'],
+                                    'SubTitle': item['slug'].replace('_', ' ').capitalize(),
+                                    'IcoPath': 'Images/app.ico',
+                                    'JsonRPCAction': {
+                                        'method': 'openUrl',
+                                        'parameters': [url + '/' + item['slug']],
+                                        'dontHideAfterAction': True
+                                    }
+                                })
+
+                            elif secondSearch in item['slug']:
+                                results.append({
+                                    'Title': item['title'],
+                                    'SubTitle': item['slug'].replace('_', ' ').capitalize(),
+                                    'IcoPath': 'Images/app.ico',
+                                    'JsonRPCAction': {
+                                        'method': 'openUrl',
+                                        'parameters': [url + '/' + item['slug']],
+                                        'dontHideAfterAction': True
+                                    }
+                                })
+
+                # Add references as result if search is empty or nearly empty
+                elif not query or query == ' ' or len(query) <= 2 or query in reference:
+
+                    resultTitle = self.get_ref_plural_name(reference).capitalize()
+                    results.append({
+                        'Title': resultTitle,
+                        'SubTitle': 'Search ' + resultTitle,
+                        'IcoPath': 'Images/app.ico',
+                        'JsonRPCAction': {
+                            'method': 'Wox.ChangeQueryText',
+                            'parameters': ['wp ' + reference + ' ', True],
+                            'dontHideAfterAction': True
+                        }
+                    })
+
+        # Wildcard search (no prefix: "wp get permalink")
+        else:
+
+            # Array to store all items found in all json files
+            contentItems = []
+
+            secondSearch = query.replace(' ', '_')
+            for reference in REFERENCES:
 
                 # Download latest version of json file if we don't have it yet
                 json_file = self.get_json_file_path(reference)
@@ -62,63 +148,47 @@ class WordPressCodex(Wox):
 
                 self.wp_ref_version = wp_ref_version
 
-                secondSearch = query.replace(reference + ' ', '').replace(' ', '_')
-                if not secondSearch or secondSearch == ' ' or len(secondSearch) <= 2:
+                for item in content:
+                    # item['reference'] = reference.upper()
+                    item['reference'] = reference.capitalize()
+                    contentItems.append(item)
 
-                    resultTitle = self.get_ref_plural_name(reference).capitalize()
-                    results.append({
-                        'Title': resultTitle,
-                        'SubTitle': 'Search ' + resultTitle,
+            # Split the query by words for the search words scoring system
+            wildWords = query.split(' ')
+            for item in contentItems:
+                
+                wordsScore = 0
+                for wildWord in wildWords:
+                    if wildWord in item['slug']:
+                        wordsScore += 1
+
+                # If we found something a match that have all words in it, prepend it in the results.
+                if len(wildWords) == wordsScore:
+                    results.insert(0, {
+                        'Title': item['title'],
+                        'SubTitle': item['reference'] + ' - ' + item['slug'].replace('_', ' ').capitalize(),
                         'IcoPath': 'Images/app.ico',
                         'JsonRPCAction': {
-                            'method': 'Wox.ChangeQueryText',
-                            'parameters': ['wp ' + reference + ' ', True],
+                            'method': 'openUrl',
+                            'parameters': [url + '/' + item['slug']],
                             'dontHideAfterAction': True
                         }
                     })
 
-                else:
+                # Else fallback and append something that match a little
+                elif secondSearch in item['slug']:
+                    results.append({
+                        'Title': item['title'],
+                        'SubTitle': item['reference'] + ' - ' + item['slug'].replace('_', ' ').capitalize(),
+                        'IcoPath': 'Images/app.ico',
+                        'JsonRPCAction': {
+                            'method': 'openUrl',
+                            'parameters': [url + '/' + item['slug']],
+                            'dontHideAfterAction': True
+                        }
+                    })
 
-                    # Add reference items
-                    for item in content:
-                        if not secondSearch or secondSearch == '' or secondSearch == ' ':
-                            results.append({
-                                'Title': item['title'],
-                                'SubTitle': item['slug'].replace('_', ' ').capitalize(),
-                                'IcoPath': 'Images/app.ico',
-                                'JsonRPCAction': {
-                                    'method': 'openUrl',
-                                    'parameters': [url + '/' + item['slug']],
-                                    'dontHideAfterAction': True
-                                }
-                            })
-
-                        elif secondSearch in item['slug']:
-                            results.append({
-                                'Title': item['title'],
-                                'SubTitle': item['slug'].replace('_', ' ').capitalize(),
-                                'IcoPath': 'Images/app.ico',
-                                'JsonRPCAction': {
-                                    'method': 'openUrl',
-                                    'parameters': [url + '/' + item['slug']],
-                                    'dontHideAfterAction': True
-                                }
-                            })
-
-            # Add references as result if search is empty or nearly empty
-            elif not query or query == ' ' or len(query) <= 2 or query in reference:
-
-                resultTitle = self.get_ref_plural_name(reference).capitalize()
-                results.append({
-                    'Title': resultTitle,
-                    'SubTitle': 'Search ' + resultTitle,
-                    'IcoPath': 'Images/app.ico',
-                    'JsonRPCAction': {
-                        'method': 'Wox.ChangeQueryText',
-                        'parameters': ['wp ' + reference + ' ', True],
-                        'dontHideAfterAction': True
-                    }
-                })
+            return results    
 
         # Update "update" result title
         if not os.path.isdir(JSON_DIR):
