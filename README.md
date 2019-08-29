@@ -37,7 +37,7 @@ Version
 
 TODO
 ----
-- ---Allow random search without prefix: `wp get permalink` *(and maybe add type of reference in description of result)*---  
+- ~~Allow random search without prefix: `wp get permalink` *(and maybe add type of reference in description of result)*~~  
 - Improve search algorithm, this should normally works: `wp function get title` *(by exploding each word and search for each of them a match)*
 - Make my own json files from developer reference site *(to replace description by arguments of func, hooks... More interesting data)*  
 
