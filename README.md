@@ -1,7 +1,8 @@
 Wox.Plugin.WordPressCodex
 =====================
 
-Searching WordPress core made easy. Finding results is very fast because it searches in local JSON files (instead of an online API).
+**Searching WordPress core made easy.**  
+Finding results is very fast because it searches in local JSON files (instead of an online API).
 The JSON files included in this workflow are created with the [WP Parser JSON plugin](https://github.com/keesiemeijer/wp-parser-json)  
 
 Features
