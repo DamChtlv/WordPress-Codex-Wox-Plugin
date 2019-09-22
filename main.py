@@ -46,10 +46,15 @@ class WordPressCodex(Wox):
     def query(self, query):
         results = []
 
-        # Prefix query ("wp function get permalink")
-        if query in STR_REFERENCES:
+        search = query.replace(' ', '_')
+        firstSearch = query.split(' ')[0].replace(' ', '_')
+        
+        # Prefix query : "wp act..."
+        if firstSearch in STR_REFERENCES:
             for reference in REFERENCES:
-                if reference in query:  # "action "...
+                if reference in query: 
+
+                    prefixSearch = query.replace(reference + ' ', '')
 
                     # Download latest version of json file if we don't have it yet
                     json_file = self.get_json_file_path(reference)
@@ -66,9 +71,7 @@ class WordPressCodex(Wox):
 
                     self.wp_ref_version = wp_ref_version
 
-                    secondSearch = query.replace(reference + ' ', '').replace(' ', '_')
-                    if not secondSearch or secondSearch == ' ' or len(secondSearch) <= 2:
-
+                    if not prefixSearch :
                         resultTitle = self.get_ref_plural_name(reference).capitalize()
                         results.append({
                             'Title': resultTitle,
@@ -83,32 +86,48 @@ class WordPressCodex(Wox):
 
                     else:
 
-                        # Add reference items
+                        firstLevelMatchs = []
+                        secondLevelMatchs = []
+                        thirdLevelMatchs = []
+
+                        # Split the query by words for the search words scoring system
+                        splitWords = prefixSearch.split(' ')
                         for item in content:
-                            if not secondSearch or secondSearch == '' or secondSearch == ' ':
-                                results.append({
-                                    'Title': item['title'],
-                                    'SubTitle': item['slug'].replace('_', ' ').capitalize(),
-                                    'IcoPath': 'Images/app.ico',
-                                    'JsonRPCAction': {
-                                        'method': 'openUrl',
-                                        'parameters': [url + '/' + item['slug']],
-                                        'dontHideAfterAction': True
-                                    }
-                                })
 
-                            elif secondSearch in item['slug']:
-                                results.append({
-                                    'Title': item['title'],
-                                    'SubTitle': item['slug'].replace('_', ' ').capitalize(),
-                                    'IcoPath': 'Images/app.ico',
-                                    'JsonRPCAction': {
-                                        'method': 'openUrl',
-                                        'parameters': [url + '/' + item['slug']],
-                                        'dontHideAfterAction': True
-                                    }
-                                })
+                            wordsScore = 0
+                            for splitWord in splitWords:
+                                if splitWord in item['slug']:
+                                    wordsScore += 1
 
+                            resultObject = {
+                                'Title': item['title'],
+                                'SubTitle': item['slug'].replace('_', ' ').capitalize(),
+                                'IcoPath': 'Images/app.ico',
+                                'JsonRPCAction': {
+                                    'method': 'openUrl',
+                                    'parameters': [url + '/' + item['slug']],
+                                    'dontHideAfterAction': True
+                                }
+                            }
+
+                            # If we found the perfect match, prepend it first in the results.
+                            if len(splitWords) == wordsScore and prefixSearch.replace(' ', '_') == item['slug']:
+                                firstLevelMatchs.append(resultObject)
+
+                            # If we found a match that have all words in it, prepend it in the results after first.
+                            elif len(splitWords) == wordsScore and item['slug'].split('_')[0] == prefixSearch.split(' ')[0]:
+                                secondLevelMatchs.append(resultObject)
+
+                            # If we found a match that have all words in it, prepend it in the results after second.
+                            elif len(splitWords) == wordsScore and prefixSearch.replace(' ', '_') in item['slug']:
+                                thirdLevelMatchs.append(resultObject)
+
+                            # Else fallback and append something that match a little
+                            elif prefixSearch.replace(' ', '_') in item['slug']:
+                                results.append(resultObject)
+
+                        results = firstLevelMatchs + secondLevelMatchs + thirdLevelMatchs + results
+                        
                 # Add references as result if search is empty or nearly empty
                 elif not query or query == ' ' or len(query) <= 2 or query in reference:
 
@@ -124,13 +143,12 @@ class WordPressCodex(Wox):
                         }
                     })
 
-        # Wildcard search (no prefix: "wp get permalink")
+        # Wildcard query (no prefix) : "wp get permalink"
         else:
 
             # Array to store all items found in all json files
             contentItems = []
 
-            secondSearch = query.replace(' ', '_')
             for reference in REFERENCES:
 
                 # Download latest version of json file if we don't have it yet
@@ -149,46 +167,51 @@ class WordPressCodex(Wox):
                 self.wp_ref_version = wp_ref_version
 
                 for item in content:
-                    # item['reference'] = reference.upper()
                     item['reference'] = reference.capitalize()
+                    item['url'] = url
                     contentItems.append(item)
 
+            firstLevelMatchs = []
+            secondLevelMatchs = []
+            thirdLevelMatchs = []
+
             # Split the query by words for the search words scoring system
-            wildWords = query.split(' ')
+            splitWords = query.split(' ')
             for item in contentItems:
                 
                 wordsScore = 0
-                for wildWord in wildWords:
-                    if wildWord in item['slug']:
+                for splitWord in splitWords:
+                    if splitWord in item['slug']:
                         wordsScore += 1
 
-                # If we found something a match that have all words in it, prepend it in the results.
-                if len(wildWords) == wordsScore:
-                    results.insert(0, {
-                        'Title': item['title'],
-                        'SubTitle': item['reference'] + ' - ' + item['slug'].replace('_', ' ').capitalize(),
-                        'IcoPath': 'Images/app.ico',
-                        'JsonRPCAction': {
-                            'method': 'openUrl',
-                            'parameters': [url + '/' + item['slug']],
-                            'dontHideAfterAction': True
-                        }
-                    })
+                resultObject = {
+                    'Title': item['title'],
+                    'SubTitle': item['reference'] + ' - ' + item['slug'].replace('_', ' ').capitalize(),
+                    'IcoPath': 'Images/app.ico',
+                    'JsonRPCAction': {
+                        'method': 'openUrl',
+                        'parameters': [item['url'] + '/' + item['slug']],
+                        'dontHideAfterAction': True
+                    }
+                }
+
+                # If we found the perfect match, prepend it first in the results.
+                if len(splitWords) == wordsScore and search == item['slug']:
+                    firstLevelMatchs.insert(0, resultObject)
+
+                # If we found a match that have all words in it, prepend it in the results after first.
+                elif len(splitWords) == wordsScore and item['slug'].split('_')[0] == search.split('_')[0]:
+                    secondLevelMatchs.append(resultObject)
+
+                # If we found a match that have all words in it, prepend it in the results after first.
+                elif len(splitWords) == wordsScore:
+                    thirdLevelMatchs.insert(1, resultObject)
 
                 # Else fallback and append something that match a little
-                elif secondSearch in item['slug']:
-                    results.append({
-                        'Title': item['title'],
-                        'SubTitle': item['reference'] + ' - ' + item['slug'].replace('_', ' ').capitalize(),
-                        'IcoPath': 'Images/app.ico',
-                        'JsonRPCAction': {
-                            'method': 'openUrl',
-                            'parameters': [url + '/' + item['slug']],
-                            'dontHideAfterAction': True
-                        }
-                    })
+                elif search in item['slug']:
+                    results.append(resultObject)
 
-            return results    
+            results = firstLevelMatchs + secondLevelMatchs + thirdLevelMatchs + results
 
         # Update "update" result title
         if not os.path.isdir(JSON_DIR):
@@ -234,6 +257,7 @@ class WordPressCodex(Wox):
                 self.debug('JSON files update failed...')
 
         return results
+
 
     # Make plural names
     def get_ref_plural_name(self, reference):
