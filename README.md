@@ -6,12 +6,14 @@ The JSON files included in this workflow are created with the [WP Parser JSON pl
 
 Features
 ---------
-You can search through all this and click to access rapidly on the WordPress reference page :
+You can search through all this and click to access rapidly on the WordPress reference page:
 - ***Actions***: `wp action init`
 - ***Classes***: `wp class wp query`
 - ***Hooks***: `wp hook get term`
 - ***Filters***: `wp filter edit term link`
 - ***Functions***: `wp function get permalink`  
+
+... or you can also **search randomly** like so: `wp get permalink`  
 
 [![Screen 1](https://github.com/DamChtlv/WordPress-Codex-Wox-Plugin/blob/assets/Screenshots/screen1.png)](#screen1)  
 [![Screen 2](https://github.com/DamChtlv/WordPress-Codex-Wox-Plugin/blob/assets/Screenshots/screen2.png)](#screen2)  
